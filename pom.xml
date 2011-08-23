@@ -1,0 +1,18 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.github.nexus85</groupId>
+  <artifactId>programming-practice</artifactId>
+  <version>1.0</version>
+  <packaging>pom</packaging>
+  <name>Programming Practice</name>
+  <description>William Bao's practice code for research and study</description>
+
+  <properties>
+    <main.version>1.0</main.version>
+  </properties>
+  <modules>
+    <module>java-test</module>
+  </modules>
+</project>
+
