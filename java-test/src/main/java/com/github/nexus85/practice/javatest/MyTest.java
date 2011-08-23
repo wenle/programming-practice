@@ -1,4 +1,4 @@
-package com.github.nexus85.programmingpractice.javatest;
+package com.github.nexus85.practice.javatest;
 
 public class MyTest {
 
