@@ -34,7 +34,6 @@ public class CustomMatcher<T> implements IArgumentMatcher {
     this.checker = checker;
   }
 
-  @Override
   public boolean matches(final Object actual) {
 
     if (checker == null) {
@@ -55,7 +54,6 @@ public class CustomMatcher<T> implements IArgumentMatcher {
     return checker.check(expected, actual);
   }
 
-  @Override
   public void appendTo(StringBuffer buffer) {
 
     buffer.append("customMatcher(");
