@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:osgi="http://www.springframework.org/schema/osgi" xmlns:osgix="http://www.springframework.org/schema/osgi-compendium"
+  xmlns:ctx="http://www.springframework.org/schema/context"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans   
+       http://www.springframework.org/schema/beans/spring-beans.xsd                      
+       http://www.springframework.org/schema/osgi  
+       http://www.springframework.org/schema/osgi/spring-osgi.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/osgi-compendium
+       http://www.springframework.org/schema/osgi-compendium/spring-osgi-compendium.xsd">
+
+  <bean id="fileEntityMap" class="java.util.HashMap">
+    <constructor-arg>
+      <map>
+        <entry key="/bmi/cluster/etc/csm/latest/netcfgdb\.xml" value="system.LoadBalancing,config.Interface,config.OptimizationSetting,config.Route,config.TrafficClassificationRule,config.Vlan,inventory.Port,inventory.SfpInfo" />
+        <entry key="/bmi/cluster/etc/csm/latest/csmNodes\.xml" value="system.MaintenanceMode" />
+        <entry key="/bmi/cluster/etc/csm/latest/ntp\.xml" value="system.NtpInfo" />
+        <entry key="/bmi/cluster/etc/csm/latest/inventoryDB\.xml" value="system.System,inventory.Chassis,inventory.ChassisComponent,inventory.Port,inventory.SfpInfo" />
+        <entry key="/bmi/cluster/etc/csm/latest/csmCfg\.xml" value="system.System,config.SubscriberSessionSetting,security.SecurityGlobalSetting" />
+        <entry key="/bmi/cluster/etc/csmData/latest/localtime" value="system.System" />
+        <entry key="/bmi/cluster/etc/csmData/latest/backup/.*" value="maint.ConfigDataBackup" />
+        <entry key="/bmi/cluster/etc/mfm/latest/mfm_config_public\.xml" value="config.OptimizationSetting" />
+        <entry key="/bmi/cluster/etc/osn/latest/webgrp/webproxy\.xml" value="config.OptimizationSetting,config.SubscriberSessionSetting" />
+        <entry key="/bmi/cluster/etc/mfm/latest/mfm_config_private\.xml" value="config.OptimizationSetting" />
+        <entry key="/bmi/cluster/etc/csm/latest/radius/aliasmapping\.xml" value="config.RadiusAliasMapping,config.RadiusSessionDbMapping" />
+        <entry key="/bmi/cluster/etc/csm/latest/radius/radiusd\.xml" value="config.RadiusClient,config.RadiusSetting" />
+        <entry key="/bmi/cluster/etc/csm/latest/csmSnmp\.xml" value="config.SnmpCommunity,config.TrapReceiver" />
+        <entry key="/bmi/cluster/etc/csmData/latest/release/.*" value="maint.SoftwareImage" />
+        <!-- There isn't an entity named "ActivePolicyFile", it's a special case mapped to syncActivePolicyFile method-->
+        <entry key="/bmi/cluster/etc/osn/latest/redirector-config/policy_management_config\.xml" value="config.ActivePolicyFile" />
+      </map>
+    </constructor-arg>
+  </bean>
+
+  <bean id="firstOnlyEntityList" class="java.util.ArrayList">
+    <constructor-arg>
+      <list>
+        <value>system.OverloadControl</value>
+        <value>config.RadiusAttr</value>
+        <value>inventory.ChassisLedStatus</value>
+        <value>inventory.ChassisTempInfo</value>
+        <value>inventory.PwrDomain</value>
+        <value>maint.ConfigDataBackup</value>
+        <value>maint.Software</value>
+        <value>security.UserAccount</value>
+        <value>security.UserSession</value>
+        <value>fault.Alarm</value>
+        <value>fault.Event</value>
+        <!--File cann't find-->
+        <!-- entry key="/bmi/cluster/etc/csm/latest/splashScreen.txt" value="SecurityGlobalSetting" / -->
+        <value>security.SecurityGlobalSetting</value>
+        <!-- entry key="/bmi/etc/radius/radius.dict" value="RadiusAttr" / -->
+        <!-- entry key="/bmi/etc/version" value="Software" /> -->
+      </list>
+    </constructor-arg>
+  </bean>
+
+</beans>
