@@ -1,0 +1,112 @@
+#!/usr/bin/python
+from sys import argv, exit
+import platform
+import os
+import os.path
+from subprocess import *
+
+VERSION_FILE = '/opt/bmi/ems/version'
+SUPERVISOR_BASE = '/opt/bmi/ems/supervisor'
+SUPERVISORCTL = os.path.join(SUPERVISOR_BASE, 'usr/bin/supervisorctl')
+SUPERVISOR_CONFIG = os.path.join(SUPERVISOR_BASE, 'etc/supervisord.conf')
+python_version_tuple = platform.python_version_tuple()
+CUSTOM_PYTHON_PATH = os.path.join(SUPERVISOR_BASE, 'usr/lib/python' + python_version_tuple[0] + "." + python_version_tuple[1] + '/site-packages')
+
+def printUsage():
+    print 'Usage: bmwd {start|stop|restart|startall|stopall|restartall|status} [<procname>...]'
+    print '  or:  bmwd [--emsversion|--help]'
+    print '  start <procname1> ... <procnameN>:       Start one or more processes'
+    print '  stop <procname1> ... <procnameN>:        Stop one or more processes'
+    print '  restart <procname1> ... <procnameN>:     Restart one or more processes'
+    print '  startall:                                Start all processes'
+    print '  stopall:                                 Stop all processes'
+    print '  restartall:                              Restart all processes'
+    print '  status:                                  Print process status'
+    print '  --emsversion:                            Show EMS version information'
+    print '  --help:                                  Display this help and exit'
+
+def appendProcessName(args):
+    if len(argv) < 3: return
+    for i in range(2, len(argv)):
+        args.append(argv[i])
+
+def printStatus(output):
+    print 'Process Name          State      Pid   Up time'
+    print '-------------------- -------- ------- -----------------'
+    for line in output.splitlines():
+        strs = line.replace(',', ' ').split()
+        name = strs[0].ljust(20)
+        state = strs[1].ljust(8)
+        if len(strs[0]) > 20: #too long process name
+            print line.replace(' pid ','').replace(', uptime ', '   ')
+        elif len(strs) < 3 or strs[2] != 'pid': #no pid: process starting or failure
+            other = ''
+            for i in range(2, len(strs)):
+                other = other + ' ' + strs[i]
+            print name, state, other
+        else:
+            other = ''
+            for i in range(5, len(strs)):
+                other = other + ' ' + strs[i]
+            print name, state, strs[3].rjust(7), other
+
+#arguments for supervisorctl invoke
+args = []
+args.append(SUPERVISORCTL)
+args.append('-c')
+args.append(SUPERVISOR_CONFIG)
+
+if len(argv) == 1 or argv[1] == '--help':
+    printUsage()
+    exit()
+elif argv[1] not in ['start', 'stop', 'restart', 'startall', 'stopall', 'restartall', 'status', '--emsversion']:
+    print 'Wrong arguments'
+    printUsage()
+    exit(1)
+elif argv[1] in ['start', 'stop', 'restart'] and len(argv) < 3:
+    print 'Missing process name'
+    printUsage()
+    exit(1)
+elif argv[1] == '--emsversion':
+    try:
+        version = open(VERSION_FILE, 'r')
+    except IOError, e:
+        print 'Can not open version file:', e
+        exit(1)
+    print version.readline(),
+    exit()
+elif argv[1] == 'start':
+    args.append('start')
+    appendProcessName(args)
+elif argv[1] == 'stop':
+    args.append('stop')
+    appendProcessName(args)
+elif argv[1] == 'restart':
+    args.append('restart')
+    appendProcessName(args)
+elif argv[1] == 'startall':
+    args.append('start')
+    args.append('all')
+elif argv[1] == 'stopall':
+    args.append('stop')
+    args.append('all')
+elif argv[1] == 'restartall':
+    args.append('restart')
+    args.append('all')
+elif argv[1] == 'status':
+    args.append('status')
+
+env={}
+env.setdefault('PYTHONPATH', CUSTOM_PYTHON_PATH)
+invoke = Popen(args,stdout=PIPE,stderr=STDOUT,env=env)
+output = invoke.communicate()[0]
+ret = invoke.wait()
+if output.find('Supervisor.sock no such file') > 0:
+    print 'Supervisord daemon is not running.'
+elif argv[1] == 'status':
+    printStatus(output)
+elif argv[1] in ['startall', 'stopall', 'restartall'] and len(output) == 0:
+    print "No process affected"
+else:
+    print output,
+exit(ret)
