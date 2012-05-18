@@ -54,6 +54,11 @@
       <artifactId>morphia</artifactId>
       <version>1.0.0-BMI</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.thrift</groupId>
+      <artifactId>libthrift</artifactId>
+      <version>0.6.1</version>
+    </dependency>
   </dependencies>
 
 </project>
