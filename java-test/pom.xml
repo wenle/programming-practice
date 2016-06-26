@@ -52,7 +52,7 @@
     <dependency>
       <groupId>com.google.code</groupId>
       <artifactId>morphia</artifactId>
-      <version>1.0.0-BMI</version>
+      <version>0.104</version>
     </dependency>
     <dependency>
       <groupId>org.apache.thrift</groupId>
